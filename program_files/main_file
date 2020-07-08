@@ -1,0 +1,327 @@
+#!/usr/bin/tclsh
+
+package require struct
+set line_no 0
+regsub {\\program_files\\(.*)$} $::argv0 {\program_files\output.html} output_file_name	
+set ::opfile [open $output_file_name  w]
+
+# Main program
+proc main {file_name} {
+	global ipfile output_file_name ::error_value line_no
+	::struct::stack ::stk1	
+	set line_no 0
+	regsub {\\program_files\\(.*)$} $::argv0 {\program_files\errorfile} error_file_name	
+	set ::error_value 0
+	set ::ipfile [open $file_name r]
+	puts $::opfile {<!DOCTYPE html>}
+	puts $::opfile {<html>}
+	while {[gets $::ipfile line] >= 0} {
+		if {$::error_value == 1} {
+			return 
+		} elseif {$line == "\)"} {
+			if {[::stk1 size] == 0} {
+				set errfile [open $error_file_name w]
+				incr line_no
+		        	puts $errfile "$line_no->extra \")\""
+		        	close $errfile
+				set ::error_value 1
+				::stk1 destroy
+				return
+			}
+			puts $::opfile [::stk1 pop]
+		} elseif { [catch {eval $line} error1] } {
+			::stk1 destroy
+			set errfile [open $error_file_name w]
+		        puts $errfile "$line_no->$error1"
+		        close $errfile
+			set ::error_value 1
+		        return 
+		 }
+		 incr line_no
+	}
+	puts $::opfile </html>
+	if {$::error_value == 1} {
+		return 
+	}
+       tk_messageBox -icon error -title "No file selected" -type ok -message "$::error_value"	
+	if {[::stk1 size] > 0} {
+		set brace_no [::stk1 size]
+		set errfile [open $error_file_name w]
+	      	puts $errfile "$line_no->Missing \"(\""
+        	close $errfile
+		set ::error_value 1
+		::stk1 destroy
+		return
+	}
+	::stk1 destroy
+
+	close $ipfile
+	close $::opfile
+}
+# Proc title
+proc शीर्ष {विषय} {
+	puts $::opfile {<title>}
+	puts $::opfile "${विषय}"
+	puts $::opfile {</title>}
+}
+
+proc मुख्य { \( } {
+	global ::error_value line_no
+	puts $::opfile {<head>}
+	::stk1 push {</head>}
+}
+
+proc  मु1 {\(} {
+	global ::error_value line_no
+	puts $::opfile {<h1>}
+	::stk1 push {</h1>}
+}
+proc  मु2 {\(} {
+	global ::error_value line_no
+	puts $::opfile {<h2>}
+	::stk1 push {</h2>}
+}
+proc  मु3 {\(} {
+	global ::error_value line_no
+	puts $::opfile {<h3>}
+	::stk1 push {</h3>}
+}
+proc  मु4 {\(} {
+	global ::error_value line_no
+	puts $::opfile {<h4>}
+	::stk1 push {</h4>}
+}
+proc  मु5 {\(} {
+	global ::error_value line_no
+	puts $::opfile {<h5>}
+	::stk1 push {</h5>}
+}
+proc  मु6 {\(} {
+	global ::error_value line_no
+	puts $::opfile {<h6>}
+	::stk1 push {</h6>}
+}
+proc  विषय {विषयँ} {
+	global ::error_value line_no
+	puts $::opfile "${विषयँ}"
+}
+proc  देह {\(} {
+	global ::error_value line_no
+	puts $::opfile {<body>}
+	::stk1 push {</body>}
+}
+proc प {\(} {
+	global ::error_value line_no
+	puts $::opfile {<p>}
+	::stk1 push {</p>}
+}
+proc भाग {{ रूप ""} { नाम ""} \(} {
+	global ::error_value line_no
+	if {${रूप} != ""} {
+		if {${नाम} == ""} {
+			set errfile [open $error_file_name w]
+		      	puts $errfile "$line_no->नामम न जानामि"
+	        	close $errfile
+			set ::error_value 1
+			::stk1 destroy
+			return;
+		} else {
+			puts $opfile "<div id = \"${नाम}\">"
+		}
+	} else {
+		puts $opfile {<div>}
+	}
+	puts $::opfile {<p>}
+	::stk1 push {</p>}
+}
+
+proc महत्व {\(} {
+	global ::error_value line_no
+	puts $::opfile {<em>}
+	::stk1 push {</em>}
+}
+proc कल्पते  {\(} {
+	global ::error_value line_no
+	puts $::opfile {<ol>}
+	::stk1 push {</ol>}
+}
+proc आकुल {\(} {
+	global ::error_value line_no
+	puts $::opfile {<ul>}
+	::stk1 push {</ul>}
+}
+proc वस्तु  {\(} {
+	global ::error_value line_no
+	puts $::opfile {<li>}
+	::stk1 push {</li>}
+}
+proc टीका {विषय} {
+	global ::error_value line_no
+	puts $::opfile {<!-- ${विषय} -->}
+}
+proc पीठिका   {\(} {
+	global ::error_value line_no
+	puts $::opfile {<table>}
+	::stk1 push {</table>}
+}
+proc माला  {\(} {
+	global ::error_value line_no
+	puts $::opfile {<tr>}
+	::stk1 push {</tr>}
+}
+#proc दत्त {\(} {
+#	global ::error_value line_no
+#	puts $::opfile {<td>}
+#	::stk1 push {</td>}
+#}
+
+#proc बल {\(} {
+#	global ::error_value line_no
+#	puts $::opfile {<strong>}
+#	::stk1 push {</strong>}
+#}
+proc भंग {} {
+	global ::error_value line_no
+	puts $::opfile {<br>}
+}
+
+proc  परिसन्धि {args} {
+	global line_no
+	array set options {-सन्धि {} -विषय {} -नया 0}
+	regsub {\\program_files\\(.*)$} $::argv0 {\program_files\errorfile} error_file_name	
+	while {[llength $args]} {
+		switch -glob -- [lindex $args 0] {
+		    	-सन्धि   {set args [lassign $args - options(-सन्धि)]}
+		    	\(     {set args [lassign $args - options(-विषय)]}
+			-नया    {set args [lassign $args - options(-नया)]}
+		    	-*     {set ::error_value 1;	set errfile [open $error_file_name w]; puts $errfile "$line_no->परिसन्धि कार्येण दोषपूर्ण निरूपकम;";close $errfile; ::stk1 destroy; return;}
+		    	default {set ::error_value 1;	set errfile [open $error_file_name w]; puts $errfile "$line_no->परिसन्धि कार्येण दोषपूर्ण निरूपकम;";close $errfile; ::stk1 destroy; return;}
+		}
+	}
+	set नया 0
+	set सन्धि $options(-सन्धि)
+	set नया  $options(-नया)
+	if {${सन्धि} == ""} {
+		set ::error_value 1;	set errfile [open $error_file_name w]; puts $errfile "$line_no->-सन्धि विहीनम। परिसन्धि कार्येण दोषपूर्ण निरूपकम;";close $errfile; ::stk1 destroy; return;
+	} elseif {[regexp {[01]} ${नया}] == 0} {
+		set ::error_value 1;	set errfile [open $error_file_name w]; puts $errfile "$line_no->-नया निरूपकम एकम अथवा शून्यम नयति । परिसन्धि कार्येण दोषपूर्ण निरूपकम;";close $errfile; ::stk1 destroy; return;
+	}
+	if {${नया} == 1} {
+		puts $::opfile "<a href=\"${सन्धि}\" target=\"_blank\">"
+	} else {
+		puts $::opfile "<a href=\"${सन्धि}\" > "
+	}
+	::stk1 push {</a>}
+}
+
+proc प्रतिमा {args} {
+	global line_no
+	array set options {-मूल {} -विवरण {}}
+	regsub {\\program_files\\(.*)$} $::argv0 {\program_files\errorfile} error_file_name	
+	while {[llength $args]} {
+		switch -glob -- [lindex $args 0] {
+		    	-मूल       {set args [lassign $args - options(-मूल)]}
+		    	-विवरण     {set args [lassign $args - options(-विवरण)]}
+		    	-*     {set ::error_value 1;	set errfile [open $error_file_name w]; puts $errfile "$line_no->परिसन्धि कार्येण दोषपूर्ण निरूपकम;";close $errfile; ::stk1 destroy; return;}
+		    	default {set ::error_value 1;	set errfile [open $error_file_name w]; puts $errfile "$line_no->परिसन्धि कार्येण दोषपूर्ण निरूपकम;";close $errfile; ::stk1 destroy; return;}
+		}
+	}
+	set मूल  $options(-मूल)
+	set विवरण $options(-विवरण)
+	if {${मूल} == ""} {
+		set ::error_value 1;	set errfile [open $error_file_name w]; puts $errfile "$line_no->-मूल विहीनम। प्रतिमा  कार्येण दोषपूर्ण निरूपकम;";close $errfile; ::stk1 destroy; return;
+	} 
+	if {${विवरण} == ""} {
+		puts $::opfile "<img src=\"${मूल}\"/>"
+	} else {
+		puts $::opfile "<img src=\"${मूल}\" alt=\"${विवरण}\" /> "
+	}
+}
+
+proc प्रधान  {args} {
+	global line_no
+	array set options {-अवधि {} }
+	regsub {\\program_files\\(.*)$} $::argv0 {\program_files\errorfile} error_file_name	
+	while {[llength $args]} {
+		switch -glob -- [lindex $args 0] {
+		    	-अवधि       {set args [lassign $args - options(-अवधि)]}
+		    	-*     {set ::error_value 1;	set errfile [open $error_file_name w]; puts $errfile "$line_no->परिसन्धि कार्येण दोषपूर्ण निरूपकम;";close $errfile; ::stk1 destroy; return;}
+		    	default {set ::error_value 1;	set errfile [open $error_file_name w]; puts $errfile "$line_no->परिसन्धि कार्येण दोषपूर्ण निरूपकम;";close $errfile; ::stk1 destroy; return;}
+		}
+	}
+	set अवधि  $options(-अवधि)
+	if {${अवधि} == ""} {
+		set ::error_value 1;	set errfile [open $error_file_name w]; puts $errfile "$line_no->-अवधि विहीनम। प्रधानकार्येण दोषपूर्ण निरूपकम;";close $errfile; ::stk1 destroy; return;
+	} 
+	puts $::opfile "<th scope=\"${अवधि}\"/>"
+}
+proc दत्त   {args} {
+	global line_no
+	array set options {-स्रेणि {} -पाद {} }
+	regsub {\\program_files\\(.*)$} $::argv0 {\program_files\errorfile} error_file_name
+	set स्रेणि 0
+	set पाद 0	
+	while {[llength $args]} {
+		switch -glob -- [lindex $args 0] {
+		    	-स्रेणि       {set args [lassign $args - options(-स्रेणि)]}
+		    	-पाद      {set args [lassign $args - options(-पाद)]}
+		    	-*     {set ::error_value 1;	set errfile [open $error_file_name w]; puts $errfile "$line_no->परिसन्धि कार्येण दोषपूर्ण निरूपकम;";close $errfile; ::stk1 destroy; return;}
+		    	default {set ::error_value 1;	set errfile [open $error_file_name w]; puts $errfile "$line_no->परिसन्धि कार्येण दोषपूर्ण निरूपकम;";close $errfile; ::stk1 destroy; return;}
+		}
+	}
+	set स्रेणि  $options(-स्रेणि)
+	set पाद   $options(-पाद)
+	if {[regexp {\d+} ${स्रेणि}] == 0} {
+		set ::error_value 1;	set errfile [open $error_file_name w]; puts $errfile "$line_no->-स्रेणि निरूपकम सख्यमेव  नयति । दत्त कार्येण दोषपूर्ण निरूपकम;";close $errfile; ::stk1 destroy; return;
+	} elseif {[regexp {\d+} ${पाद}] == 0} {
+		set ::error_value 1;	set errfile [open $error_file_name w]; puts $errfile "$line_no->-पाद  निरूपकम संख्यमेव  नयति । दत्त कार्येण दोषपूर्ण निरूपकम;";close $errfile; ::stk1 destroy; return;
+	}
+
+	if {${स्रेणि } == 0} {
+		if {${पाद} == 0 } {
+			puts $::opfile "<td>"
+		} else {
+			puts $::opfile "<td colspan=${पाद}>"
+		}
+	} else {
+		{${पाद} == 0} {
+			puts $::opfile "<td rowspan=${स्रेणि}"
+		} else {
+			puts $::opfile "<td rowspan=${स्रेणि} colspan=${पाद}>"
+		}
+	}
+	::stk1 push {</td>}
+}
+
+proc  परिसन्धि {args} {
+	global line_no
+	array set options {-मार्ग {} -प्रव्रुत्ति  {} -नया 0}
+	regsub {\\program_files\\(.*)$} $::argv0 {\program_files\errorfile} error_file_name	
+	while {[llength $args]} {
+		switch -glob -- [lindex $args 0] {
+		    	-मार्ग   {set args [lassign $args - options(-मार्)]}
+		    	\(     {set args [lassign $args - options(-विषय)]}
+			-प्रव्रुत्ति    {set args [lassign $args - options(-प्रव्रु)]}
+		    	-*     {set ::error_value 1;	set errfile [open $error_file_name w]; puts $errfile "$line_no->परिसन्धि कार्येण दोषपूर्ण निरूपकम;";close $errfile; ::stk1 destroy; return;}
+		    	default {set ::error_value 1;	set errfile [open $error_file_name w]; puts $errfile "$line_no->परिसन्धि कार्येण दोषपूर्ण निरूपकम;";close $errfile; ::stk1 destroy; return;}
+		}
+	}
+	set नया 0
+	set मार्ग  $options(-मार्ग)
+	set प्रव्रुत्ति   $options(-प्रव्रुत्ति )
+	if {${मार्ग } == ""} {
+		set ::error_value 1;	set errfile [open $error_file_name w]; puts $errfile "$line_no->-सन्धि विहीनम। परिसन्धि कार्येण दोषपूर्ण निरूपकम;";close $errfile; ::stk1 destroy; return;
+	 } elseif {${प्रव्रुत्ति } == ""} {
+		set ::error_value 1;	set errfile [open $error_file_name w]; puts $errfile "$line_no->-सन्धि विहीनम। परिसन्धि कार्येण दोषपूर्ण निरूपकम;";close $errfile; ::stk1 destroy; return;
+	} elseif {[regexp {[01]} ${नया}] == 0} {
+		set ::error_value 1;	set errfile [open $error_file_name w]; puts $errfile "$line_no->-नया निरूपकम एकम अथवा शून्यम नयति । परिसन्धि कार्येण दोषपूर्ण निरूपकम;";close $errfile; ::stk1 destroy; return;
+	}
+	if {${नया} == 1} {
+		puts $::opfile "<a href=\"${सन्धि}\" target=\"_blank\">"
+	} else {
+		puts $::opfile "<a href=\"${सन्धि}\" > "
+	}
+	::stk1 push {</form>}
+}
+
+

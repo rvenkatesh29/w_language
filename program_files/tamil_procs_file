@@ -1,0 +1,8 @@
+proc எழுது {விஷயம்} {
+	print ${விஷயம்} 
+}
+
+proc நியமி {மாறி மதிப்பு} {
+	set retvalue [set_var ${மாறி} ${மதிப்பு}]
+	return $retvalue
+}

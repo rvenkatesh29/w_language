@@ -1,0 +1,39 @@
+encoding system utf-8
+regsub {\\program_files\\(.*)$} $::argv0 {\program_files\errorfile} error_file_name
+proc hindi {} {
+	global error_file_name
+	set errfile [open $error_file_name r]
+	set err ""
+	while {[gets $errfile line]>=0} {
+		lappend err $line
+	}
+	regsub -all {\}} $err {} err
+	regsub -all {\{} $err {} err
+	regsub {can't read} $err {न पठामि} err
+	regsub {no such variable} $err {न तद विकारी} err
+	regsub {wrong # args: should be} $err {संख्यया दोशपूर् निरूपकम| शुद्ध छन्दम अस्ति } err
+	regsub {invalid command name} $err {தவறான  கட்டளை } err
+	regsub {invalid character} $err { दोशपूर्न अक्शरम  } err
+	regsub {in expression} $err {एतत वाक्यम} err
+	close $errfile	
+	return $err
+}
+proc tamil {} {
+	global error_file_name
+	set errfile [open $error_file_name r]
+	set err ""
+	while {[gets $errfile line]>=0} {
+		lappend err $line
+	}
+	regsub -all {\}} $err {} err
+	regsub -all {\{} $err {} err
+	regsub {can't read} $err {படிக்கமுடியவில்லை} err
+	regsub {no such variable} $err {மாறி அவ்வாறு இல்லை} err
+	regsub {wrong # args: should be} $err {தவறான  உறுப்புக்கள். சரியான  சந்தம்} err
+	regsub {invalid command name} $err {தவறான  கட்டளை } err
+	close $errfile
+	return $err
+}
+
+
+

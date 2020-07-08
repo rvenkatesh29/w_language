@@ -1,0 +1,14 @@
+proc लिख {विषय} {
+	set ret_val [print ${विषय}]
+	return $ret_val 
+}
+
+proc उपमा {विकारी मूल्यकँ} {
+	set ret_val [set_var ${विकारी} ${मूल्यकँ}]
+	return $ret_val
+}
+
+proc यदि {दशा  } {
+	set ret_val [if_statement ${दशा} ]
+	return
+}
