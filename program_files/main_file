@@ -8,6 +8,9 @@ set ::opfile [open $output_file_name  w]
 # Main program
 proc main {file_name} {
 	global ipfile output_file_name ::error_value line_no
+	if {[info exists ::stk1]} {
+		destroy ::stk1
+	}
 	::struct::stack ::stk1	
 	set line_no 0
 	regsub {\\program_files\\(.*)$} $::argv0 {\program_files\errorfile} error_file_name	
@@ -18,7 +21,7 @@ proc main {file_name} {
 	while {[gets $::ipfile line] >= 0} {
 		if {$::error_value == 1} {
 			return 
-		} elseif {$line == "\)"} {
+		} elseif {[regexp {^\s*\)\s*$} $line] == 1} {
 			if {[::stk1 size] == 0} {
 				set errfile [open $error_file_name w]
 				incr line_no
@@ -114,6 +117,7 @@ proc प {\(} {
 	puts $::opfile {<p>}
 	::stk1 push {</p>}
 }
+
 proc भाग {{ रूप ""} { नाम ""} \(} {
 	global ::error_value line_no
 	if {${रूप} != ""} {
@@ -184,6 +188,25 @@ proc भंग {} {
 	puts $::opfile {<br>}
 }
 
+proc भाग1 {रूपनाम वर्ग } {
+	if {${वर्ग} == ""} {
+		{${रूपनाम} == "" } {
+			puts $::opfile "<div>"
+		} else {
+			puts $::opfile "<div id=\"${रूपनाम}\">"
+		}
+	} else {
+		if {${रूपनाम} == "" } {
+			puts $::opfile "<div class=\"${वर्ग}\">"
+		} else {
+			puts $::opfile "<div class=\"${वर्ग}\" id=\"${रूपनाम}\">" 
+		}
+	}
+	::stk1 push {</div>}
+}
+
+
+
 proc  परिसन्धि {args} {
 	global line_no
 	array set options {-सन्धि {} -विषय {} -नया 0}
@@ -213,20 +236,8 @@ proc  परिसन्धि {args} {
 	::stk1 push {</a>}
 }
 
-proc प्रतिमा {args} {
+proc प्रतिमा1 {मूल विवरण} {
 	global line_no
-	array set options {-मूल {} -विवरण {}}
-	regsub {\\program_files\\(.*)$} $::argv0 {\program_files\errorfile} error_file_name	
-	while {[llength $args]} {
-		switch -glob -- [lindex $args 0] {
-		    	-मूल       {set args [lassign $args - options(-मूल)]}
-		    	-विवरण     {set args [lassign $args - options(-विवरण)]}
-		    	-*     {set ::error_value 1;	set errfile [open $error_file_name w]; puts $errfile "$line_no->परिसन्धि कार्येण दोषपूर्ण निरूपकम;";close $errfile; ::stk1 destroy; return;}
-		    	default {set ::error_value 1;	set errfile [open $error_file_name w]; puts $errfile "$line_no->परिसन्धि कार्येण दोषपूर्ण निरूपकम;";close $errfile; ::stk1 destroy; return;}
-		}
-	}
-	set मूल  $options(-मूल)
-	set विवरण $options(-विवरण)
 	if {${मूल} == ""} {
 		set ::error_value 1;	set errfile [open $error_file_name w]; puts $errfile "$line_no->-मूल विहीनम। प्रतिमा  कार्येण दोषपूर्ण निरूपकम;";close $errfile; ::stk1 destroy; return;
 	} 
