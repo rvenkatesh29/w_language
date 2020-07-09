@@ -34,6 +34,9 @@ proc compile {} {
 		}
 		set a [open $error_file_name w]
 		close $a
+		if {[info exists ::stk1]} {
+			destroy ::stk1
+		}
 		source $language_file_name
 		source $source_file_name
 		set error_val [main $file_name]
@@ -43,6 +46,7 @@ proc compile {} {
 		.result.op delete 0.0 end
 		if {$err_text == ""} {
 			.result.op insert end "Execution successful"
+			tk_messageBox -icon info -title "Execution Successful" -type ok -message "Execution sucessful!!! Go ahead and launch"
 		} else {
 			source $error_proc_file
 			set err_text [$language]
@@ -58,8 +62,8 @@ proc compile {} {
 proc run {} {
 	global file_name
 	regsub {\\program_files\\(.*)$} $::argv0 {\program_files\output.html} output_file_name
+	file copy -force $output_file_name ${file_name}.html
 	_launchBrowser $output_file_name
-	file copy $output_file_name ${file_name}.html
 
 }
 proc save_file {} {
