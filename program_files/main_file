@@ -43,7 +43,6 @@ proc main {file_name} {
 	if {$::error_value == 1} {
 		return 
 	}
-       tk_messageBox -icon error -title "No file selected" -type ok -message "$::error_value"	
 	if {[::stk1 size] > 0} {
 		set brace_no [::stk1 size]
 		set errfile [open $error_file_name w]
