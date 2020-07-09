@@ -55,7 +55,13 @@ proc compile {} {
 	}
 }
 
+proc run {} {
+	global file_name
+	regsub {\\program_files\\(.*)$} $::argv0 {\program_files\output.html} output_file_name
+	_launchBrowser $output_file_name
+	file copy $output_file_name ${file_name}.html
 
+}
 proc save_file {} {
 	global file_name
 	if {[winfo exists .t] == 0 } {
@@ -237,7 +243,35 @@ proc open_file {} {
 	}
 }
 
+proc launchBrowser url {
+    global tcl_platform
 
+    if {$tcl_platform(platform) eq "windows"} {
+        # first argument to "start" is "window title", which is not used here
+        set command [list {*}[auto_execok start] {}]
+        # (older) Windows shell would start a new command after &, so shell escape it with ^
+        #set url [string map {& ^&} $url]
+        # but 7+ don't seem to (?) so this nonsense is gone
+        if {[file isdirectory $url]} {
+            # if there is an executable named eg ${url}.exe, avoid opening that instead:
+            set url [file nativename [file join $url .]]
+        }
+    } elseif {$tcl_platform(os) eq "Darwin"} {
+        # It *is* generally a mistake to use $tcl_platform(os) to select functionality,
+        # particularly in comparison to $tcl_platform(platform).  For now, let's just
+        # regard it as a stylistic variation subject to debate.
+        set command [list open]
+    } else {
+        set command [list xdg-open]
+    }
+    exec {*}$command $url &
+}
+
+proc _launchBrowser {url} {
+    if [catch {launchBrowser $url} err] {
+        tk_messageBox -icon error -message "error '$err' with '$command'"
+    }
+}
 
 wm title . "W" 
 #wm resizable . 0 0
@@ -253,6 +287,7 @@ bind . <KeyPress-Control_R><o> {open_file}
 bind . <KeyPress-Control_L><s> {save_file}
 bind . <KeyPress-Control_R><s> {save_file}
 bind . <F9> {compile}
+bind . <F10> {run}
 
 menu .menu.file1
 .menu add cascade -menu .menu.file1 -label File
@@ -264,6 +299,7 @@ menu .menu.file1
 menu .menu.execute
 .menu add cascade -menu .menu.execute -label Execute
 .menu.execute add command -label "Compile   F9" -command {compile}
+.menu.execute add command -label "Launch.. F10" -command {run}
 
 encoding system utf-8
 menu .menu.language 
@@ -285,6 +321,6 @@ pack .result.res_label -side top
 text .result.op -width 1000 -height 9
 .result.op configure -state disabled 
 pack .result.op -expand 1 -fill both
-#.f.menu.execute add cascade -menu [list .f.menu.execute.compile .f.menu.execute.run] -label Execute
-#.f.menu.execute.compile add command -label Compile -command {compile} 
-#.f.menu.execute.run add command -label Run -command {run}
+#.menu.execute add cascade -menu [list .f.menu.execute.compile .f.menu.execute.run] -label Execute
+#.menu.execute.compile add command -label Compile -command {compile} 
+#.menu.execute.run add command -label Run -command {run}
