@@ -1,8 +1,34 @@
-proc எழுது {விஷயம்} {
-	print ${விஷயம்} 
+proc  भाग  {args} {
+	global line_no
+	array set options {-रूपनाम  {} -वर्ग {} }
+	regsub {\\program_files\\(.*)$} $::argv0 {\program_files\errorfile} error_file_name	
+	while {[llength $args]} {
+		switch -glob -- [lindex $args 0] {
+		    	-वर्ग      {set args [lassign $args - options(-सन्धि)]}
+		    	-रूपनाम     {set args [lassign $args - options(-विषय)]}
+		    	-*     {set ::error_value 1;	set errfile [open $error_file_name w]; puts $errfile "$line_no->भाग कार्येण दोषपूर्ण निरूपकम;";close $errfile; ::stk1 destroy; return;}
+		    	default {set ::error_value 1;	set errfile [open $error_file_name w]; puts $errfile "$line_no->भाग कार्येण दोषपूर्ण निरूपकम;";close $errfile; ::stk1 destroy; return;}
+		}
+	}
+	set वर्ग $options(-वर्ग)
+	set रूपनाम  $options(-रूपनाम)
+	भाग1 $रूपनाम $वर्ग 
+}
+proc प्रतिमा {args} {
+	global line_no
+	array set options {-मूल {} -विवरण {}}
+	regsub {\\program_files\\(.*)$} $::argv0 {\program_files\errorfile} error_file_name	
+	while {[llength $args]} {
+		switch -glob -- [lindex $args 0] {
+		    	-मूल       {set args [lassign $args - options(-मूल)]}
+		    	-विवरण     {set args [lassign $args - options(-विवरण)]}
+		    	-*     {set ::error_value 1;	set errfile [open $error_file_name w]; puts $errfile "$line_no->परिसन्धि कार्येण दोषपूर्ण निरूपकम;";close $errfile; ::stk1 destroy; return;}
+		    	default {set ::error_value 1;	set errfile [open $error_file_name w]; puts $errfile "$line_no->परिसन्धि कार्येण दोषपूर्ण निरूपकम;";close $errfile; ::stk1 destroy; return;}
+		}
+	}
+	set मूल  $options(-मूल)
+	set विवरण $options(-विवरण)
+	प्रतिमा1 ${मूल} ${विवरण}
 }
 
-proc நியமி {மாறி மதிப்பு} {
-	set retvalue [set_var ${மாறி} ${மதிப்பு}]
-	return $retvalue
-}
+
