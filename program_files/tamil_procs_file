@@ -1,34 +1,181 @@
-proc  भाग  {args} {
+#Tamil proc file
+proc தலை  {விஷயம்} {
+	शीर्ष  ${விஷயம்}
+}
+
+proc முக்யம்  {\(} {
+	मुख्य (
+}
+proc மு1  {\(} {
+	मु1 (
+}
+proc மு2 {\(} {
+	मु2 (
+}
+proc மு3  {\(} {
+	मु3 (
+}
+proc மு4 {\(} {
+	मु4 (
+}
+proc மு5 {\(} {
+	मु5 (
+}
+proc மு6  {\(} {
+	मु6 (
+}
+
+proc விஷயம் {விஷயம்} {
+	विषय ${விஷயம்}
+}
+
+proc விளக்கம்  {\(} {
+	देह (
+}
+
+proc  பத்தி {\(} {
+	प (
+}
+
+
+proc அழுத்தம் {\(} {
+	महत्व (
+}
+proc பங்கம் {} {
+	भंग 
+}
+
+proc வரிசை  {\(} {
+	global ::error_value line_no
+	puts $::opfile {<ol>}
+	::stk1 push {</ol>}
+}
+proc கலந்த {\(} {
+	global ::error_value line_no
+	puts $::opfile {<ul>}
+	::stk1 push {</ul>}
+}
+
+proc பொருள் {\(} {
+	global ::error_value line_no
+	puts $::opfile {<em>}
+	::stk1 push {</em>}
+}
+proc வெற்று {\(} {
+	global ::error_value line_no
+	puts $::opfile {<ol>}
+	::stk1 push {</ol>}
+}
+proc அட்டவணை {\(} {
+	global ::error_value line_no
+	puts $::opfile {<ul>}
+	::stk1 push {</ul>}
+}
+proc  பாகம்  {args} {
 	global line_no
-	array set options {-रूपनाम  {} -वर्ग {} }
+	array set options {-பெயர்   {} -வகுப்பு  {} }
 	regsub {\\program_files\\(.*)$} $::argv0 {\program_files\errorfile} error_file_name	
 	while {[llength $args]} {
 		switch -glob -- [lindex $args 0] {
-		    	-वर्ग      {set args [lassign $args - options(-सन्धि)]}
-		    	-रूपनाम     {set args [lassign $args - options(-विषय)]}
-		    	-*     {set ::error_value 1;	set errfile [open $error_file_name w]; puts $errfile "$line_no->भाग कार्येण दोषपूर्ण निरूपकम;";close $errfile; ::stk1 destroy; return;}
-		    	default {set ::error_value 1;	set errfile [open $error_file_name w]; puts $errfile "$line_no->भाग कार्येण दोषपूर्ण निरूपकम;";close $errfile; ::stk1 destroy; return;}
+		    	-பெயர்      {set args [lassign $args - options(-பெயர்)]}
+		    	-வகுப்பு     {set args [lassign $args - options(-வகுப்பு)]}
+		    	-*     {set ::error_value 1;	set errfile [open $error_file_name w]; puts $errfile "$line_no->பாகம் செயலிக்கு தவறான உறுப்புக்கள்  ;";close $errfile; ::stk1 destroy; return;}
+		    	default {set ::error_value 1;	set errfile [open $error_file_name w]; puts $errfile "$line_no->பாகம் செயலிக்கு தவறான உறுப்புக்கள்  ;;";close $errfile; ::stk1 destroy; return;}
 		}
 	}
-	set वर्ग $options(-वर्ग)
-	set रूपनाम  $options(-रूपनाम)
-	भाग1 $रूपनाम $वर्ग 
+	set பெயர் $options(-பெயர்)
+	set வகுப்பு  $options(-வகுப்பு)
+	भाग1 ${பெயர்} ${வகுப்பு} 
 }
-proc प्रतिमा {args} {
+
+proc பிரதிமை  {args} {
 	global line_no
-	array set options {-मूल {} -विवरण {}}
+	array set options {-மூலம் {} -விவரம்  {}}
 	regsub {\\program_files\\(.*)$} $::argv0 {\program_files\errorfile} error_file_name	
 	while {[llength $args]} {
 		switch -glob -- [lindex $args 0] {
-		    	-मूल       {set args [lassign $args - options(-मूल)]}
-		    	-विवरण     {set args [lassign $args - options(-विवरण)]}
-		    	-*     {set ::error_value 1;	set errfile [open $error_file_name w]; puts $errfile "$line_no->परिसन्धि कार्येण दोषपूर्ण निरूपकम;";close $errfile; ::stk1 destroy; return;}
-		    	default {set ::error_value 1;	set errfile [open $error_file_name w]; puts $errfile "$line_no->परिसन्धि कार्येण दोषपूर्ण निरूपकम;";close $errfile; ::stk1 destroy; return;}
+		    	-மூலம்       {set args [lassign $args - options(-மூலம்)]}
+		    	-விவரம்     {set args [lassign $args - options(-விவரம்)]}
+		    	-*     {set ::error_value 1;	set errfile [open $error_file_name w]; puts $errfile "$line_no->பிரதிமை கட்டளைக்கு தவறான அங்கங்கள்;";close $errfile; ::stk1 destroy; return;}
+		    	default {set ::error_value 1;	set errfile [open $error_file_name w]; puts $errfile "$line_no->பிரதிமை கட்டளைக்கு தவறான அங்கங்கள்;";close $errfile; ::stk1 destroy; return;}
 		}
 	}
-	set मूल  $options(-मूल)
-	set विवरण $options(-विवरण)
-	प्रतिमा1 ${मूल} ${विवरण}
+	set மூலம்  $options(-மூலம்)
+	set விவரம் $options(-விவரம்)
+	प्रतिमा1 ${மூலம்} ${விவரம்}
+} 
+proc  தொடர்பு {args} {
+	global line_no
+	array set options {-முகவரி  {} -புது 0 bracket {} }
+	
+	regsub {\\program_files\\(.*)$} $::argv0 {\program_files\errorfile} error_file_name
+	regsub {\($} $args {} args	
+	while {[llength $args]} {
+		switch -glob -- [lindex $args 0] {
+		    	-முகவரி   {set args [lassign $args - options(-முகவரி)]}
+			-புது    {set args [lassign $args - options(-புது)]}
+		    	-*     {set ::error_value 1;	set errfile [open $error_file_name w]; puts $errfile "$line_no->தொடர்பு கட்டளையில் தவறான உறுப்புக்கள்;";close $errfile; ::stk1 destroy; return;}
+		    	default {set ::error_value 1;	set errfile [open $error_file_name w]; puts $errfile "$line_no->தொடர்பு கட்டளையில் தவறான உறுப்புக்கள்";close $errfile; ::stk1 destroy; return;}
+		}
+	}
+	set முகவரி $options(-முகவரி)
+	set புது  $options(-புது)
+	if { ${புது} == ""} {
+		set புது 0	
+	}	
+	परिसन्धि1 ${முகவரி}  ${புது}  
 }
+
+proc சித்திரம்  {args} {
+	global line_no
+	array set options {-மூலம் {} -விஸ்தாரம் {} -உச்சம் {} -கட்டுப்படுத்து {} }
+	regsub {\($} $args {} args	
+	regsub {\\program_files\\(.*)$} $::argv0 {\program_files\errorfile} error_file_name	
+	set கட்டுப்படுத்து 0 
+	while {[llength $args]} {
+		switch -glob -- [lindex $args 0] {
+		    	-மூலம்       {set args [lassign $args - options(-மூலம்)]}
+		    	-விஸ்தாரம்     {set args [lassign $args - options(-விஸ்தாரம்)]}
+		    	-உச்சம்      {set args [lassign $args - options(-உச்சம்)]}
+		    	-கட்டுப்படுத்து     {set args [lassign $args - options(-கட்டுப்படுத்து)]}
+		    	-*     {set ::error_value 1;	set errfile [open $error_file_name w]; puts $errfile "$line_no->சித்திரம் கட்டளையில் தவறான உறுப்புக்கள்;";close $errfile; ::stk1 destroy; return;}
+		    	default {set ::error_value 1;	set errfile [open $error_file_name w]; puts $errfile "$line_no->சித்திரம் கட்டளையில் தவறான உறுப்புக்கள்;";close $errfile; ::stk1 destroy; return;}
+		}
+	}
+	set மூலம்  $options(-மூலம்)
+	set விஸ்தாரம் $options(-விஸ்தாரம்)
+	set உச்சம் $options(-உச்சம்)
+	set கட்டுப்படுத்து $options(-கட்டுப்படுத்து)
+	if { ${கட்டுப்படுத்து} == ""} {
+		set கட்டுப்படுத்து 0	
+	}
+	चित्र1 ${மூலம்} ${விஸ்தாரம்} ${உச்சம்} ${கட்டுப்படுத்து} 
+}
+
+proc சம்பந்தம்  {args} {
+	global line_no
+	array set options {-மூலம் {} -விவரம்  {}}
+	regsub {\\program_files\\(.*)$} $::argv0 {\program_files\errorfile} error_file_name	
+	while {[llength $args]} {
+		switch -glob -- [lindex $args 0] {
+		    	-மூலம்       {set args [lassign $args - options(-மூலம்)]}
+		    	-விவரம்     {set args [lassign $args - options(-விவரம்)]}
+		    	-*     {set ::error_value 1;	set errfile [open $error_file_name w]; puts $errfile "$line_no->பிரதிமை கட்டளைக்கு தவறான அங்கங்கள்;";close $errfile; ::stk1 destroy; return;}
+		    	default {set ::error_value 1;	set errfile [open $error_file_name w]; puts $errfile "$line_no->பிரதிமை கட்டளைக்கு தவறான அங்கங்கள்;";close $errfile; ::stk1 destroy; return;}
+		}
+	}
+
+	set மூலம்  $options(-மூலம்)
+	set விவரம் $options(-விவரம்)
+	if {${விவரம்} == "அழகு"} {
+		set விவரம்  "stylesheet"
+	} elseif {${விவரம்} == "உருவம்"} {
+		set விவரம் "icon"
+	} else {
+		set ::error_value 1;	set errfile [open $error_file_name w]; puts $errfile "$line_no->சம்பந்தம் கட்டளையின் விவரம் அங்கத்துக்கு தவறான மதிப்பு;";close $errfile; ::stk1 destroy; return;
+	}
+
+	सम्बन्ध1  ${மூலம்} ${விவரம்}
+} 
 
 
