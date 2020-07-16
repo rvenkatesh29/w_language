@@ -22,5 +22,12 @@ Then you can run this program with Tcl/Tk application. No installation is requir
 You are free to make changes, report bugs,etc and distribute it
 
 This program is released under open source license. 
-For more help, subscribe to my youtube channel: VENKATESH RAAMAN and post your comments below help videos.
+For more help, subscribe to my youtube channel: VENKATESH RAAMAN 
 
+The help videos for tamil are posted in link
+https://www.youtube.com/playlist?list=PL86veP2lHNPtBq8GrfTfhn3ykP1R08v99
+
+People are welcome to create videos in Hindi or other languages. Please send me mail describing your intentions and I will send you how-to create videos.
+
+If you have more specific queries, mail me at
+rvenkatesh29@gmail.com
